@@ -1,0 +1,16 @@
+ALTER TABLE resource_block  ADD unblock_at numeric    #  This will trigger :
+    class4_trig_record_resource_block AFTER INSERT OR DELETE OR UPDATE ON resource_block FOR EACH ROW EXECUTE PROCEDURE class4_trigfun_record_resource_block()
+    which must be checked too
+    
+
+ALTER TABLE alert_rules ADD unblock_after_min integer #  -field for setting duration of the block
+
+ALTER TABLE alert_rules ADD status BOOLEAN DEFAULT FALSE  #  is it proccess worker active for this rule
+
+alter table alert_rules_log_detail add column monitor_by integer;
+alter table alert_rules_log_detail add column prefix text;
+alter table alert_rules_log_detail add column include  integer;
+alter table alert_rules_log_detail add column exclude  integer;
+alter table alert_rules_log_detail add column trunk_type integer; 
+alter table alert_rules_log_detail add column valid_to numeric ;
+alter table email_log add column alert_rule character varying(500) ;

@@ -1,0 +1,21 @@
+[Unit]
+Description= dnl_fraud_detection script , Part of dnl_monitoring
+# When systemd stops or restarts the dnl_monitoring.service, the action is propagated to this unit
+PartOf=dnl_monitoring.service
+# Start this unit after the dnl_monitoring.service start
+After=dnl_monitoring.service
+
+[Service]
+Type=simple
+User=denovo
+WorkingDirectory=/opt/denovo/dnl_monitoring
+ExecStart=/usr/local/bin/python3 /opt/denovo/dnl_monitoring/dnl_fraud_detection.py -a debug
+PIDFile=/opt/denovo/dnl_monitoring/rules_alert.pid
+# Restart the service on non-zero exit code when terminated by a signal other than SIGHUP, SIGINT, SIGTERM or SIGPIPE
+Restart=on-failure
+RestartSec=10
+
+[Install]
+# This unit should start when app.service is starting
+WantedBy=dnl_monitoring.service
+

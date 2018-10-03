@@ -1,0 +1,2 @@
+Defaults:denovo !requiretty
+denovo  ALL=(root) NOPASSWD: /usr/sbin/tcpdump, /bin/ps

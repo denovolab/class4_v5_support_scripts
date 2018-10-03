@@ -1,0 +1,5 @@
+ alter table invoice_history add column reminders_count integer default 0 ; 
+ alter table invoice_history add column next_reminder_timestamp integer default 0 ;
+ alter table invoice_history add column invoice_filename character varying(500) ;
+ alter table invoice_history  add column start_time timestamp ;
+ alter table invoice_history  add column end_time timestamp ;

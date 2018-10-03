@@ -1,0 +1,10 @@
+certifi==2015.4.28
+Flask>=0.8.0
+google-cloud-core>=0.26.0
+google-cloud-storage>=1.3.0
+gunicorn
+paramiko
+psycopg2
+pycrypto>=2.6.1
+python-daemon>=2.1.2
+requests>=2.18.0

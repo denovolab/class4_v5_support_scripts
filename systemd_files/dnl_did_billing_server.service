@@ -1,0 +1,14 @@
+Description= softswitch helper - did billing server script
+After= multi-user.target
+
+[Service]
+Type=simple
+User=denovo
+WorkingDirectory= /opt/denovo/dnl_did_billing
+ExecStart=/usr/local/bin/python3 /opt/denovo/dnl_did_billing/server.py 
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,20 @@
+dnl_ad ver 2.0.49
+fixed bug in zero alert
+fixed percentage_notify CLAS-6346
+answered <-- CLAS-6308
+dnl_ad ver 2.0.46
+zero balance only one per day CLAS-6024
+add hour_content_{1,3,24,48} EMG&DIAL: Have to add new tag in Suspension Warning Template CLAS 6023
+
+dnl_ad ver 2.0.43
+
+CLAS-5569 <-- mail template for trunk suspension arrangement
+
+dnl_ad ver 2.0.42
+CLAS-5569 <-- "current_date"
+
+dnl_ad ver 2.0.40
+CLAS-5168 <-- answered
+CLAS-5310 <-- answered
+CLAS-5306 <-- answered/fixed
+CLAS-5311 <-- answered

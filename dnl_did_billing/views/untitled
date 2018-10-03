@@ -1,0 +1,125 @@
+systemctl command for start/stop/restart  is running as root user
+2017-08-23 13:12:55,433: DEBUG:  not_zero_calls=16, Second data: {'country': 'N/A', 'Connected Calls': 16, 'pdd': 727, 'abr': 6.58, 'revenue': Decimal('0.001990'), 'prefix': 'N/A', 'duration': 271, 'code_name': 'N/A', 'Attempts': 243, 'code': 'N/A', 'sample_size': 10, 'acd': 16.94, 'asr': 6.58, 'profitability': Decimal('13.63013698630136986301369863')}
+
+
+
+
+select  x.trunk_id, sum (total_calls) as total_calls,  sum (  not_zero_calls) as not_zero_calls  ,
+sum( duration ) as duration, sum(pdd) as pdd,
+sum(ingress_client_cost_total) as ingress_client_cost_total,sum(egress_cost_total ) as egress_cost_total    
+ FROM ( select 
+                  sum (  CASE WHEN ( call_duration > 0) THEN  1 ELSE 0 END)
+ as not_zero_calls  ,
+sum( CASE WHEN ( is_final_call = 1) THEN  call_duration ELSE 0 END ) as duration,  sum(CASE WHEN ( is_final_call = 1) THEN  1 ELSE 0 END ) as total_calls, sum(pdd) as pdd,
+sum(  CASE WHEN ( is_final_call = 1) THEN  ingress_client_cost ELSE 0 END  ) as ingress_client_cost_total,sum( CASE WHEN ( is_final_call = 1) THEN  egress_cost ELSE 0 END  ) as egress_cost_total  ,ingress_id as trunk_id 
+from client_cdr20170823    where    ingress_id is not null    and     ( time between '2017-08-23 12:57:55' and '2017-08-23 13:07:55')   group by  ingress_id   ) as x    group by  x.trunk_id   ;
+
+
+
+psql -h 192.168.112.109 -U class4_dial -d class4_dial
+
+
+
+select  x.trunk_id, sum (total_calls) as total_calls,  sum (  not_zero_calls) as not_zero_calls  ,
+sum( duration ) as duration, sum(pdd) as pdd,
+sum(ingress_client_cost_total) as ingress_client_cost_total,sum(egress_cost_total ) as egress_cost_total    
+ FROM ( select 
+                  sum (  CASE WHEN ( call_duration > 0) THEN  1 ELSE 0 END)
+ as not_zero_calls  ,
+sum( CASE WHEN ( is_final_call = 1) THEN  call_duration ELSE 0 END ) as duration,  sum(CASE WHEN ( is_final_call = 1) THEN  1 ELSE 1 END ) as total_calls, sum(pdd) as pdd,
+sum(  CASE WHEN ( is_final_call = 1) THEN  ingress_client_cost ELSE 0 END  ) as ingress_client_cost_total,sum( CASE WHEN ( is_final_call = 1) THEN  egress_cost ELSE 0 END  ) as egress_cost_total  ,ingress_id as trunk_id 
+from client_cdr20170823    where    ingress_id is not null    and     ( time between '2017-08-23 12:57:55' and '2017-08-23 13:07:55')   group by  ingress_id   ) as x    group by  x.trunk_id   ;
+
+
+   SELECT t.description, t.fee
+    FROM (
+        SELECT 'One-time Setup Fee for DID ' || did_billing_rel.did AS description,
+            CASE 
+                WHEN date_trunc('month', coalesce(did_billing_rel.start_date, CURRENT_DATE)) = 
+                    date_trunc('month', '2017-08-02'::date) THEN coalesce(did_billing_plan.did_price, 0.0)
+                ELSE 0.0
+            END AS fee
+        FROM resource
+            INNER JOIN did_billing_rel ON did_billing_rel.ingress_res_id = resource.resource_id
+            INNER JOIN did_billing_plan ON did_billing_rel.sell_billing_plan_id = did_billing_plan.id
+        WHERE resource.egress 
+            AND resource.client_id = 488
+        UNION ALL
+        SELECT 'Monthly Fee for DID ' || did_billing_rel.did AS description, 
+            did_billing_rel.days / did_billing_rel.days_in_month * coalesce(did_billing_plan.monthly_charge, 0.0) AS fee
+        FROM resource
+            INNER JOIN (
+                SELECT t.did, t.ingress_res_id, t.sell_billing_plan_id, t.days_in_month, t.end_date - t.start_date + 1 AS days
+                FROM (
+                    SELECT did_billing_rel.did, did_billing_rel.ingress_res_id, did_billing_rel.sell_billing_plan_id,
+                        date_part('days', date_trunc('month', '2017-08-02'::date) + '1 MONTH'::interval - '1 DAY'::interval) AS days_in_month,
+                        GREATEST(did_billing_rel.start_date, date_trunc('month', '2017-08-02'::date)::date) AS start_date,
+                        LEAST(did_billing_rel.end_date, date_trunc('month', '2017-08-02'::date) + '1 MONTH'::interval - '1 DAY'::interval)::date AS end_date
+                    FROM did_billing_rel
+                ) t
+                ) did_billing_rel ON did_billing_rel.ingress_res_id = resource.resource_id
+            INNER JOIN did_billing_plan ON did_billing_rel.sell_billing_plan_id = did_billing_plan.id
+        WHERE resource.egress 
+            AND resource.client_id = 488
+            AND did_billing_rel.days / did_billing_rel.days_in_month * coalesce(did_billing_plan.monthly_charge, 0.0) > 0
+    ) AS t
+    WHERE t.fee > 0
+    
+    
+    
+    
+    
+    
+    
+            SELECT 'Monthly Fee for DID ' || did_billing_rel.did AS description, 
+            did_billing_rel.days , did_billing_rel.days_in_month , coalesce(did_billing_plan.monthly_charge, 0.0) AS fee
+        FROM resource
+            INNER JOIN (
+                SELECT t.did, t.ingress_res_id, t.sell_billing_plan_id, t.days_in_month, t.end_date - t.start_date + 1 AS days
+                FROM (
+                    SELECT did_billing_rel.did, did_billing_rel.ingress_res_id, did_billing_rel.sell_billing_plan_id,
+                        date_part('days', date_trunc('month', '2017-08-02'::date) + '1 MONTH'::interval - '1 DAY'::interval) AS days_in_month,
+                        GREATEST(did_billing_rel.start_date, date_trunc('month', '2017-08-02'::date)::date) AS start_date,
+                        LEAST(did_billing_rel.end_date, date_trunc('month', '2017-08-02'::date) + '1 MONTH'::interval - '1 DAY'::interval)::date AS end_date
+                    FROM did_billing_rel
+                ) t
+                ) did_billing_rel ON did_billing_rel.ingress_res_id = resource.resource_id
+            INNER JOIN did_billing_plan ON did_billing_rel.sell_billing_plan_id = did_billing_plan.id
+        WHERE resource.egress 
+            AND resource.client_id = 496;
+            
+            
+            
+            
+            
+    UPDATE   tA
+    set tA =  222
+   
+        FROM did_billing_plan AS tA
+            INNER JOIN did_billing_rel ON did_billing_rel.sell_billing_plan_id = did_billing_plan.id
+            INNER JOIN resource ON did_billing_rel.ingress_res_id = resource.resource_id
+            
+        WHERE resource.egress 
+            AND resource.client_id = 496 ;
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+Client to be cheched  pdg_ingress_carrier client days 2 time_zone  0
+Day of Week
+2 2
+invoice_start_from 1501517120
+diff 0 1504002132.0 1501517120 2447680.0
+2485012 24 * 3601 86424
+For client with id 302 ,with billing: Day of week: Tuesday. New Invoiced is made.Last invoice was at: 2017-08-22 00:00:00 .Today  is Tuesday,  2017-08-29
+
+
+
+

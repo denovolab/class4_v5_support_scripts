@@ -1,0 +1,15 @@
+[Unit]
+Description=Pcap script api service daemon
+After=multi-user.target
+
+[Service]
+Type=simple
+User=denovo
+WorkingDirectory=/opt/denovo/pcap2
+ExecStart=/usr/local/bin/gunicorn -b 0.0.0.0:8000 pcap-wsgi --pid /opt/denovo/pcap2/logs/gunicorn.pid
+PIDFile=/opt/denovo/pcap2/logs/gunicorn.pid
+Restart=on-failure
+
+
+[Install]
+WantedBy=multi-user.target

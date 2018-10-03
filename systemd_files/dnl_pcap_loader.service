@@ -1,0 +1,15 @@
+[Unit]
+Description=Pcap script pcap storage service
+After=multi-user.target
+
+[Service]
+Type=simple
+User=denovo
+WorkingDirectory=/opt/denovo/pcap2
+ExecStart=/usr/local/bin/python3 /opt/denovo/pcap2/loaderd.py start
+PIDFile=/opt/denovo/pcap2/logs/loaderd.pid
+Restart=on-failure
+
+
+[Install]
+WantedBy=multi-user.target

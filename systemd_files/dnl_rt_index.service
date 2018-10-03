@@ -1,0 +1,15 @@
+[Unit]
+Description=Helper script for softswitch - fast indexing service
+After=multi-user.target
+
+[Service]
+Type=simple
+#User=denovo
+WorkingDirectory=/opt/denovo/dnl_rt_index
+ExecStart=/opt/denovo/dnl_rt_index/dnl_rt_index -c conf/dnl_rt_index.conf
+PIDFile=/opt/denovo/dnl_rt_index/dnl_rt_index/dnl_rt_index.pid
+Restart= always
+
+
+[Install]
+WantedBy=multi-user.target

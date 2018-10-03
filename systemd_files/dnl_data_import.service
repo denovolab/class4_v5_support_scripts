@@ -1,0 +1,15 @@
+[Unit]
+Description=Helper script for softswitch - loading data to the db
+After=multi-user.target
+
+[Service]
+Type=simple
+User=denovo
+WorkingDirectory=/opt/denovo/dnl_data_import
+ExecStart=/usr/local/bin/python3 /opt/denovo/dnl_data_import/dnl_import_dmon.py -a debug
+PIDFile=/opt/denovo/dnl_data_import/pid_import.pid
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target

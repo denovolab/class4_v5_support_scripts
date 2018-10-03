@@ -1,0 +1,16 @@
+[Unit]
+Description=Helper script for softswitch - invoice generator
+After=multi-user.target
+
+[Service]
+Type=simple
+User=denovo
+WorkingDirectory=/opt/denovo/dnl_invoice_generator
+ExecStart=/usr/local/bin/python3 /opt/denovo/dnl_invoice_generator/AutoInvoice.py
+PIDFile=/opt/denovo/dnl_invoice_generator/autoinvoice.pid
+TimeoutStartSec=10sec
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

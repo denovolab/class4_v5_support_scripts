@@ -1,0 +1,15 @@
+[Unit]
+Description=Helper script for softswitch - sending alerts
+After=multi-user.target
+
+[Service]
+Type=simple
+User=denovo
+WorkingDirectory=/opt/denovo/dnl_alerts
+ExecStart=/usr/local/bin/python3 /opt/denovo/dnl_alerts/dnl_ad.py start
+PIDFile=/var/tmp/dnl_ad.pid
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
