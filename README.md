@@ -72,3 +72,28 @@ for pcap2, you would need to patch python daemon, just copy and overwrite files 
 every folder has ini file which can be used to modify configuration if needed.  in the provided systemd service files are one way of running these scripts.
 in order to succesfully start these scripts, database must be installed, and programs for engine started first.
 
+default instalaltion path is /opt/denovo/
+so it would look like this:
+
+/opt/denovo/dnl_alerts 
+/opt/denovo/dnl_data_import  
+/opt/denovo/dnl_did_billing  
+/opt/denovo/dnl_invoice_generator  
+/opt/denovo/dnl_monitoring  
+/opt/denovo/dnl_rt_index  
+/opt/denovo/dnl_web_helper...
+
+For the pcap2 script, copy files from thirdparty into /python_lib_path/python3.5/site_packages (overwrite files there)
+also copy file from /etc folder into /etc/sudoers.d
+for this script you also need to configure ip youre using for sip, so it will caputure packets 
+default storage is set to local, but it can also be configured to use ftp, or google bucket.
+
+copy systemd files into /etc/systemd/system
+
+run each script as service wiht systwemctl
+eg.
+systemctl start dnl_alerts, systemctl start dnl_data_import....
+to enable scripts at startup  do a systemctl enable dnl_alerts, systemctl enable dnl_data_import .....
+
+before using this scripts, make sure that database has been installed.
+if any of the scripts failed to start, it will not affect working of the engine, but it can affect data showing in the ui, generating reports, and etc...
